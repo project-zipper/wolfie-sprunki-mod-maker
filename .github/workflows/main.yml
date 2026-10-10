@@ -1,0 +1,34 @@
+name: Extract Sprunki Template
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract-template:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Extract ZIP into template folder
+        run: |
+          mkdir -p template
+          unzip -o "CANON ICS Sprunke Template.zip" -d template
+
+      - name: Commit extracted files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add template/
+
+          if ! git diff --cached --quiet; then
+            git commit -m "Extract Sprunki template into template folder"
+            git push origin main
+          fi
